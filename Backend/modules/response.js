@@ -3,12 +3,12 @@ const mongoose = require('mongoose')
 const responseSchema = mongoose.Schema({
     surveyId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'survey', 
+        ref: 'Survey', 
         required: true
     },
     submittedBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user', 
+        ref: 'User', 
         required: true            
     },
     answers: [
@@ -36,5 +36,5 @@ responseSchema.set('toJSON', {
   }
 })
 
-const Response = mongoose.model('response', responseSchema)
+const Response = mongoose.model('Response', responseSchema)
 module.exports = Response
