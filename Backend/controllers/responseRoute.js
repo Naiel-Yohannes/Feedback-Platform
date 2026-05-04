@@ -1,15 +1,11 @@
 const responseRouter = require('express').Router()
-const {userExtractor} = require('../middleware/auth')
+const {userExtractor, requireRole} = require('../middleware/auth')
 const Survey = require('../modules/survey')
 const Response = require('../modules/response')
 
-responseRouter.get('/survey/:id', userExtractor, async(req, res, next) => {
+responseRouter.get('/survey/:id', userExtractor, requireRole('coordinator'), async(req, res, next) => {
     try{
         const surveyId = req.params.id
-
-        if(req.user.role !== 'coordinator'){
-            return res.status(401).json({error: 'Only a coordinator can send this request'})
-        }
 
         const survey = await Survey.findOne({_id: surveyId, owner: req.user._id})
 
@@ -25,12 +21,9 @@ responseRouter.get('/survey/:id', userExtractor, async(req, res, next) => {
     }
 })
 
-responseRouter.post('/', userExtractor, async(req, res, next) => {
+responseRouter.post('/', userExtractor, requireRole('member'), async(req, res, next) => {
     try{
         const {surveyId, questionId, selectedOption} = req.body
-        if(req.user.role !== 'member'){
-            return res.status(401).json({error: 'Only a member can send this request'})
-        }
 
         if (!surveyId || !questionId || selectedOption === undefined) {
             return res.status(400).json({ error: 'Missing content' })

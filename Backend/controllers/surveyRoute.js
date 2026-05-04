@@ -1,6 +1,6 @@
 const surveyRouter = require('express').Router()
 const Survey = require('../modules/survey')
-const { userExtractor } = require('../middleware/auth')
+const { userExtractor, requireRole } = require('../middleware/auth')
 const Response = require('../modules/response')
 
 const VALID_STATUSES = ['closed', 'open', 'draft']
@@ -30,12 +30,16 @@ surveyRouter.get('/:id', userExtractor, async (req, res, next) => {
     if (!survey) return res.status(404).json({ error: 'survey not found' })
 
     if (req.user.role === 'coordinator') {
-      if (survey.owner.toString() === req.user._id.toString()) return res.status(200).json(survey)
+      if (survey.owner.toString() === req.user._id.toString()) {
+        return res.status(200).json(survey)
+      }
       return res.status(403).json({ error: 'Forbidden' })
     }
 
     if (req.user.role === 'member') {
-      if (survey.status !== 'draft') return res.status(200).json(survey)
+      if (survey.status !== 'draft') {
+        return res.status(200).json(survey)
+      }
       return res.status(403).json({ error: 'Forbidden' })
     }
 
@@ -45,13 +49,9 @@ surveyRouter.get('/:id', userExtractor, async (req, res, next) => {
   }
 })
 
-surveyRouter.post('/', userExtractor, async (req, res, next) => {
+surveyRouter.post('/', userExtractor, requireRole('coordinator'), async (req, res, next) => {
   try {
     const { title, description, status, prompt, options } = req.body
-
-    if (!req.user || req.user.role !== 'coordinator') {
-      return res.status(403).json({ error: 'You are forbidden from sending this request' })
-    }
 
     if (!title || !status || !prompt || !options) {
       return res.status(400).json({ error: 'Missing content' })
@@ -104,16 +104,12 @@ surveyRouter.post('/', userExtractor, async (req, res, next) => {
   }
 })
 
-surveyRouter.put('/:id', userExtractor, async (req, res, next) => {
+surveyRouter.put('/:id', userExtractor, requireRole('coordinator'), async (req, res, next) => {
   try {
     const { title, description, status, prompt, options } = req.body
     const id = req.params.id
     const survey = await Survey.findById(id)
     if (!survey) return res.status(404).json({ error: 'survey not found' })
-
-    if (!req.user || req.user.role !== 'coordinator') {
-      return res.status(403).json({ error: 'You are forbidden from updating this survey' })
-    }
     
     if (req.user._id.toString() !== survey.owner.toString()) {
       return res.status(403).json({ error: 'You are forbidden from updating this survey' })
@@ -172,7 +168,7 @@ surveyRouter.put('/:id', userExtractor, async (req, res, next) => {
   }
 })
 
-surveyRouter.delete('/:id', userExtractor, async (req, res, next) => {
+surveyRouter.delete('/:id', userExtractor, requireRole('coordinator'), async (req, res, next) => {
   try {
     const id = req.params.id
     const survey = await Survey.findById(id)

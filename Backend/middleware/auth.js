@@ -35,4 +35,21 @@ const userExtractor = async (req, res, next) => {
     }
 }
 
-module.exports = { tokenExtractor, userExtractor }
+const requireRole = (role) => {
+    return (req, res, next) => {
+        try {
+            if(!req.user){
+                return res.status(401).json({error: 'Unauthorized'})
+            }
+            if(req.user.role !== role){
+                return res.status(403).json({error: 'Forbidden'})
+            }
+            next()
+
+        }catch(error){
+            next(error)
+        }
+    }
+}
+
+module.exports = { tokenExtractor, userExtractor, requireRole }

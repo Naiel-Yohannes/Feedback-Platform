@@ -40,7 +40,6 @@ const createUser = async (role = 'coordinator', status = 201, password = DEFAULT
         .send(user)
         .expect(status)
 
-    // API shouldn't return password, but tests need it for login.
     return { ...newUser.body, password }
 }
 
@@ -399,9 +398,9 @@ describe('Full backend test', () => {
             const newResponse = await api.post('/api/responses')
                 .set('Authorization', `Bearer ${token}`)
                 .send(response)
-                .expect(401)
+                .expect(403)
 
-            expect(newResponse.body.error).toBe('Only a member can send this request')
+            expect(newResponse.body.error).toBe('Forbidden')
         })
 
         test('cannot see draft surveys', async() => {
