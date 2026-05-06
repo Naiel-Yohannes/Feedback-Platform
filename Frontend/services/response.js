@@ -2,7 +2,7 @@ import api from './interceptor'
 const baseURL = '/api/responses'
 
 const getResponse = async (id) => {
-    const response = await api.get(`${baseURL}/${id}`)
+    const response = await api.get(`${baseURL}/survey/${id}`)
     return response.data
 }
 

@@ -5,12 +5,14 @@ const api = axios.create()
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        if(error.response && error.response.status === 401){
-            window.dispatchEvent(new Event('unauthorized'))
-        } else if (error.response.status === 403) {
-            window.dispatchEvent(new Event('forbidden'))
-        } else if (error.response.status === 404) {
-            window.dispatchEvent(new Event('notfound'))
+        if(error.response ){
+            if(error.response.status === 401){
+                window.dispatchEvent(new Event('unauthorized'))
+            } else if (error.response.status === 403) {
+                window.dispatchEvent(new Event('forbidden'))
+            } else if (error.response.status === 404) {
+                window.dispatchEvent(new Event('notfound'))
+            }
         }
 
         return Promise.reject(error)
