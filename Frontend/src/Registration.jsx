@@ -44,9 +44,9 @@ const RegistrationForm = ({setUser}) => {
                 <label>
                     Password: <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
                 </label>
-                {rolesToChoose.map(r => {
-                    <button key={r} onClick={setRole(r)}>${r}</button>
-                })}
+                {rolesToChoose.map(r => (
+                    <button type="button" key={r} onClick={() => setRole(r)}>${r}</button>
+                ))}
                 <button type="submit">Register</button>
             </form>
         </div>
