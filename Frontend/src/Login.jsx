@@ -1,8 +1,10 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import loginServices from '../services/login'
 import { setToken } from "../services/interceptor"
 
 const LoginForm = ({setUser}) => {
+    const navigate = useNavigate()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -15,6 +17,7 @@ const LoginForm = ({setUser}) => {
             setUser({username: loggingUser.username, name: loggingUser.name, role: loggingUser.role})
             setUsername('')
             setPassword('')
+            navigate('/dashboard')
         }catch(error){
             console.log(error)
             setUsername('')

@@ -1,22 +1,36 @@
-const ShowSurvey = ({allSurveys}) => {
+const ShowSurvey = ({filteredSurveys}) => {
+    if(filteredSurveys.length === 0){
+        return <p>No surveys found</p>
+    }
     return(
-        allSurveys.map(s => (
-            <div key={s.id}>
-                <h1>{s.title}</h1>
-                <p>{s.description}</p>
-                <p>Status: {s.status}</p>
-                <ul>
-                    {s.questions.map(
-                        q => (
-                            <div key={q.id}>
-                                <p>{q.prompt}</p>
-                                <ul>{q.options.map(o => <li key={o}>{o}</li>)}</ul>
-                            </div>
-                        )
-                    )}
-                </ul>
-            </div>
-        ))
+            <table >
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Responses</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {filteredSurveys.map(s => (
+                        <tr key={s.id}>
+                            <td>{s.title}</td>
+                            <td>{s.status}</td>
+                            <td></td>
+                            <td>
+                                {s.status === 'draft' ? (
+                                    <button>Edit</button>
+                                ) : s.status === 'open' ? (
+                                    <button>View</button>
+                                ) : (
+                                    <button>Results</button>
+                                )}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
     )
 }
 

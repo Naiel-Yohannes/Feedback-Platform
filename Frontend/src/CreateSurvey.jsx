@@ -13,13 +13,41 @@ const CreateSurvey = () => {
 
     const surveyForm = async(e) => {
         e.preventDefault()
+        const trimmedTitle = title.trim()
+        const trimmedPrompt = prompt.trim()
+        const trimmedOptions = options.map(o => o.trim()).filter(o => o.length > 0)
+        const trimmedDescription = description.trim()
+
+        if (trimmedTitle.length < 10) {
+            console.log('Title must be at least 10 characters.')
+            return
+        }
+        if (!status) {
+            console.log('Choose a status (draft, open, or closed).')
+            return
+        }
+        if (trimmedPrompt.length < 5) {
+            console.log('Question must be at least 5 characters.')
+            return
+        }
+        if (trimmedOptions.length === 0) {
+            console.log('Add at least one non-empty option.')
+            return
+        }
+        if (trimmedDescription.length > 0 && trimmedDescription.length < 10) {
+            console.log('Description must be at least 10 characters, or leave it empty.')
+            return
+        }
+
         try{
             const survey = {
-                title,
-                description,
-                prompt,
+                title: trimmedTitle,
+                prompt: trimmedPrompt,
                 status,
-                options
+                options: trimmedOptions
+            }
+            if (trimmedDescription.length >= 10) {
+                survey.description = trimmedDescription
             }
             await surveyServices.createSurvey(survey)
             setTitle('')
@@ -33,6 +61,7 @@ const CreateSurvey = () => {
     }
     const addOption = () => {
         try{
+            if(option.trim() === '') return
             setOptions([...options, option])
             setOption('')
         }catch(error){
@@ -41,27 +70,61 @@ const CreateSurvey = () => {
     }
     return(
         <div>
-            <h1>Create Survey</h1>
-            <form onSubmit={surveyForm}>
-                <label>
-                    Title: <input type="text" value={title} onChange={e => setTitle(e.target.value)} />
-                </label>
-                <label>
-                    Description: <input type="text" value={description} onChange={e => setDescription(e.target.value)} />
-                </label>
-                <label>
-                    Question: <input type="text" value={prompt} onChange={e => setPrompt(e.target.value)} />
-                </label>
-                {VALID_STATUSES.map(s => (
-                    <button type="button" key={s} onClick={() => setStatus(s)}>${s}</button>
-                ))
-                }
-                <label>
-                    Option: <input type="text" value={option} onChange={e => setOption(e.target.value)} />
-                </label>
-                <button onClick={() => addOption()}>Add option</button>
-                <button type="submit">Send</button>
-            </form>
+            <div className="topbar">
+                <div>
+                    <h2>Create Survey</h2>
+                </div>
+                <div>
+                    <button>Save draft</button>
+                    <button>Publish</button>
+                </div>
+            </div>
+            <div className="leftbar">
+                <form onSubmit={surveyForm}>
+                    <label>
+                        Title <br /> <input type="text" value={title} onChange={e => setTitle(e.target.value)} />
+                    </label>
+
+                    <label>
+                        Description <br /> <input type="text" value={description} onChange={e => setDescription(e.target.value)} />
+                    </label>
+
+                    <label>
+                        Status <br />
+                        {VALID_STATUSES.map(s => (
+                            <button type="button" key={s} onClick={() => setStatus(s)}>{s}</button>
+                        ))
+                        }
+                    </label>
+                    
+                    <label>
+                        Question <br /> <input type="text" value={prompt} onChange={e => setPrompt(e.target.value)} />
+                    </label>
+                    
+                    <label>
+                        Option <br /> <input type="text" value={option} onChange={e => setOption(e.target.value)} />
+                    </label>
+
+                    <button type="button" onClick={() => addOption()}>+ Add option</button>
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+                <div className="rightbar">
+                    <p>Preview</p>
+                    <div>
+                        <h2>{title}</h2>
+                        <p>{description}</p>
+                        <p>{status}</p>
+                        <p>{prompt}</p>
+                        <ul>
+                            {options.map(o => (
+                                <li key={o}>
+                                    <i className="fa-regular fa-circle mr-2"></i> {o}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
         </div>
     )
 }

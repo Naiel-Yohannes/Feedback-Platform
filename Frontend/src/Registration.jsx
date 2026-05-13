@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"
 import userServices from '../services/user'
 import loginServices from '../services/login'
 import { setToken } from "../services/interceptor"
 
 const RegistrationForm = ({setUser}) => {
+    const navigate = useNavigate()
     const [username, setUsername] = useState('')
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
@@ -17,11 +19,12 @@ const RegistrationForm = ({setUser}) => {
             const loggingUser = await loginServices.login({username: newUser.username, password})
             await setToken(loggingUser.token)
             localStorage.setItem('token', JSON.stringify(loggingUser))
-            setUser({username: loggingUser.username, name: loggingUser.name})
+            setUser({username: loggingUser.username, name: loggingUser.name, role: loggingUser.role})
             setUsername('')
             setName('')
             setPassword('')
             setRole('')
+            navigate('/dashboard')
         }catch(error){
             console.log(error)
             setUsername('')
@@ -45,7 +48,7 @@ const RegistrationForm = ({setUser}) => {
                     Password: <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
                 </label>
                 {rolesToChoose.map(r => (
-                    <button type="button" key={r} onClick={() => setRole(r)}>${r}</button>
+                    <button type="button" key={r} onClick={() => setRole(r)}>{r}</button>
                 ))}
                 <button type="submit">Register</button>
             </form>
