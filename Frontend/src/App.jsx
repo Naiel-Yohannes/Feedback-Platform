@@ -9,6 +9,7 @@ import Layout from './Layout'
 import { Routes, Route } from 'react-router-dom'
 import Dashboard from './Dashboard'
 import LandingPage from './LandingPage'
+import ViewSurvey from './ViewSurvey'
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -59,6 +60,7 @@ function App() {
           <Route path='/dashboard' element={<Layout/>}>
             <Route index element={<Dashboard user={user} allSurveys={allSurveys} />} />
             <Route path='create' element={<CreateSurvey setAllSurveys={setAllSurveys} />}/>
+            <Route path='survey/:id' element={<ViewSurvey />} />
           </Route>
         </Route>
       </Routes>

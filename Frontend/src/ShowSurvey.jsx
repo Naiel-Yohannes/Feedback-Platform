@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom"
+
 const ShowSurvey = ({filteredSurveys}) => {
+    const navigate = useNavigate()
     if(filteredSurveys.length === 0){
         return <p>No surveys found</p>
     }
@@ -22,7 +25,7 @@ const ShowSurvey = ({filteredSurveys}) => {
                                 {s.status === 'draft' ? (
                                     <button>Edit</button>
                                 ) : s.status === 'open' ? (
-                                    <button>View</button>
+                                    <button onClick={() => navigate(`/dashboard/survey/${s.id}`)}>View</button>
                                 ) : (
                                     <button>Results</button>
                                 )}
