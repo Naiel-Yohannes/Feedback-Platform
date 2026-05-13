@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams} from "react-router-dom"
 import surveyServices from '../services/survey'
 
 const ViewSurvey = () => {
     const { id } = useParams()
     const [survey, setSurvey] = useState(null)
-    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchSurvey = async () => {
