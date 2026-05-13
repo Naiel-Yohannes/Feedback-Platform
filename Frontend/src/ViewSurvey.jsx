@@ -34,7 +34,6 @@ const ViewSurvey = () => {
                             ))}
                         </ul>
                     </h3>
-                    <button  onClick={() => navigate(`/dashboard/survey/edit/${id}`)}>Edit Draft</button>
                     <button>View Results</button>
                 </div>
         
