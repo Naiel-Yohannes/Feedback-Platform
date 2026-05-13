@@ -23,7 +23,7 @@ const ShowSurvey = ({filteredSurveys}) => {
                             <td></td>
                             <td>
                                 {s.status === 'draft' ? (
-                                    <button>Edit</button>
+                                    <button onClick={() => navigate(`/dashboard/survey/edit/${s.id}`)}>Edit</button>
                                 ) : s.status === 'open' ? (
                                     <button onClick={() => navigate(`/dashboard/survey/${s.id}`)}>View</button>
                                 ) : (
