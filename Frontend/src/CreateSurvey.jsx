@@ -1,7 +1,7 @@
 import { useState } from "react"
 import surveyServices from '../services/survey'
 
-const CreateSurvey = () => {
+const CreateSurvey = ({setAllSurveys}) => {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [status, setStatus] = useState('')
@@ -11,8 +11,7 @@ const CreateSurvey = () => {
 
     const VALID_STATUSES = ['open', 'closed', 'draft']
 
-    const surveyForm = async(e) => {
-        e.preventDefault()
+    const surveyForm = async() => {
         const trimmedTitle = title.trim()
         const trimmedPrompt = prompt.trim()
         const trimmedOptions = options.map(o => o.trim()).filter(o => o.length > 0)
@@ -49,7 +48,8 @@ const CreateSurvey = () => {
             if (trimmedDescription.length >= 10) {
                 survey.description = trimmedDescription
             }
-            await surveyServices.createSurvey(survey)
+            const newSurvey = await surveyServices.createSurvey(survey)
+            setAllSurveys(prev => [...prev, newSurvey])
             setTitle('')
             setDescription('')
             setStatus('')
@@ -68,6 +68,11 @@ const CreateSurvey = () => {
             console.log(error)
         }
     }
+
+    const removeOption = (indexToRemove) => {
+        setOptions(options.filter((_, i) => i !== indexToRemove)) 
+    }
+
     return(
         <div>
             <div className="topbar">
@@ -75,12 +80,15 @@ const CreateSurvey = () => {
                     <h2>Create Survey</h2>
                 </div>
                 <div>
-                    <button>Save draft</button>
-                    <button>Publish</button>
+                    {status && (
+                        <button onClick={() => surveyForm()}>
+                            {status === 'draft' ? 'Save Draft' : status === 'closed' ? 'Archive' : 'Publish'}
+                        </button>
+                    )}
                 </div>
             </div>
             <div className="leftbar">
-                <form onSubmit={surveyForm}>
+                <form>
                     <label>
                         Title <br /> <input type="text" value={title} onChange={e => setTitle(e.target.value)} />
                     </label>
@@ -101,12 +109,17 @@ const CreateSurvey = () => {
                         Question <br /> <input type="text" value={prompt} onChange={e => setPrompt(e.target.value)} />
                     </label>
                     
+                    {options.map((o, i) => (
+                        <div key={i}>
+                            <span>{o}</span>
+                            <button type="button" onClick={() => removeOption(i)}>Remove</button>
+                        </div>
+                    ))}
+
                     <label>
                         Option <br /> <input type="text" value={option} onChange={e => setOption(e.target.value)} />
                     </label>
-
-                    <button type="button" onClick={() => addOption()}>+ Add option</button>
-                    <button type="submit">Send</button>
+                    <button type="button" onClick={addOption}>+ Add option</button>
                 </form>
             </div>
                 <div className="rightbar">
@@ -117,10 +130,10 @@ const CreateSurvey = () => {
                         <p>{status}</p>
                         <p>{prompt}</p>
                         <ul>
-                            {options.map(o => (
-                                <li key={o}>
+                            {options.map((o, i) => (
+                                <div key={i}>
                                     <i className="fa-regular fa-circle mr-2"></i> {o}
-                                </li>
+                                </div>
                             ))}
                         </ul>
                     </div>

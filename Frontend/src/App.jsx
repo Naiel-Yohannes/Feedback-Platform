@@ -58,7 +58,7 @@ function App() {
         <Route element={<ProtectedRoute user={user} />}>
           <Route path='/dashboard' element={<Layout/>}>
             <Route index element={<Dashboard user={user} allSurveys={allSurveys} />} />
-            <Route path='create' element={<CreateSurvey/>}/>
+            <Route path='create' element={<CreateSurvey setAllSurveys={setAllSurveys} />}/>
           </Route>
         </Route>
       </Routes>
