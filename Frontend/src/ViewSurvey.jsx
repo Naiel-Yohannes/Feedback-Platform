@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
 import { useParams} from "react-router-dom"
 import surveyServices from '../services/survey'
+import { useNavigate } from "react-router-dom"
 
 const ViewSurvey = () => {
     const { id } = useParams()
     const [survey, setSurvey] = useState(null)
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchSurvey = async () => {
@@ -33,7 +35,7 @@ const ViewSurvey = () => {
                             ))}
                         </ul>
                     </h3>
-                    <button>View Results</button>
+                    <button onClick={() => navigate(`/dashboard/responses/survey/${survey.id}`)}>View Results</button>
                 </div>
         
             ) : (

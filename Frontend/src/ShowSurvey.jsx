@@ -27,7 +27,7 @@ const ShowSurvey = ({filteredSurveys}) => {
                                 ) : s.status === 'open' ? (
                                     <button onClick={() => navigate(`/dashboard/survey/${s.id}`)}>View</button>
                                 ) : (
-                                    <button>Results</button>
+                                    <button onClick={() => navigate(`/dashboard/responses/survey/${s.id}`)}>Results</button>
                                 )}
                             </td>
                         </tr>

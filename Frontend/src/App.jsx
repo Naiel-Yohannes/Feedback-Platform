@@ -11,6 +11,7 @@ import Dashboard from './Dashboard'
 import LandingPage from './LandingPage'
 import ViewSurvey from './ViewSurvey'
 import EditSurvey from './EditSurvey'
+import SingleSurveyResponse from './SingleSurveyResponse'
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -63,6 +64,7 @@ function App() {
             <Route path='create' element={<CreateSurvey setAllSurveys={setAllSurveys} />}/>
             <Route path='survey/:id' element={<ViewSurvey />} />
             <Route path='survey/edit/:id' element={<EditSurvey setAllSurveys={setAllSurveys} />} />
+            <Route path='responses/survey/:id' element={<SingleSurveyResponse />} />
           </Route>
         </Route>
       </Routes>
