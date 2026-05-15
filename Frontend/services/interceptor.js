@@ -7,11 +7,12 @@ api.interceptors.response.use(
     (error) => {
         if(error.response ){
             if(error.response.status === 401){
-                window.dispatchEvent(new Event('unauthorized'))
+                localStorage.setToken(null)
+                window.location.href = '/login'
             } else if (error.response.status === 403) {
-                window.dispatchEvent(new Event('forbidden'))
+                alert('You don\'t have permission to do that')
             } else if (error.response.status === 404) {
-                window.dispatchEvent(new Event('notfound'))
+                alert('Resource not found')
             }
         }
 

@@ -1,9 +1,23 @@
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ShowSurvey from "./ShowSurvey";
 import { Link } from "react-router-dom";
+import responseServices from '../services/response';
 
 const CoordinatorDasboard = ({allSurveys}) => {
+    const [responses, setResponses] = useState([])
+
+    useEffect(() => {
+        const fetchResponses = async () => {
+            try {
+                const fetchedResponses = await Promise.all(allSurveys.map(s => responseServices.getResponse(s.id)))
+                setResponses(fetchedResponses)                
+            } catch (error) {
+                console.error(error)
+            }
+        }
+        fetchResponses()
+    }, [allSurveys])
 
     const [filter, setFilter] = useState('all')
     const [searchFilter, setSearchFilter] = useState('')
@@ -22,7 +36,6 @@ const CoordinatorDasboard = ({allSurveys}) => {
             </div>
             <div className="sidebar">
                 <Link to="/dashboard"><i className="fa-solid fa-table-cells-large"></i>Surveys</Link>
-                <Link to="/results"><i className="fa-jelly-fill fa-regular fa-chart-bar"></i>Results</Link>
                 <Link to="/settings"><i className="fa-solid fa-gear"></i>Settings</Link>
             </div>
             <div className="mainbar">
@@ -38,7 +51,7 @@ const CoordinatorDasboard = ({allSurveys}) => {
                     </div>
                     <div>
                         <p>Responses</p>
-                        <h3></h3>
+                        <h3>{responses.flat().length}</h3>
                     </div>
                     <div>
                         <p>Closed</p>
