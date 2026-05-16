@@ -14,7 +14,7 @@ const LoginForm = ({setUser}) => {
             const loggingUser = await loginServices.login({username, password})
             await setToken(loggingUser.token)
             localStorage.setItem('token', JSON.stringify(loggingUser))
-            setUser({username: loggingUser.username, name: loggingUser.name, role: loggingUser.role})
+            setUser(loggingUser)
             setUsername('')
             setPassword('')
             navigate('/dashboard')
