@@ -35,7 +35,6 @@ const CoordinatorDasboard = ({allSurveys}) => {
                 <Link to="/dashboard/create">+ New Survey</Link>
             </div>
             <div className="sidebar">
-                <Link to="/dashboard"><i className="fa-solid fa-table-cells-large"></i>Surveys</Link>
                 <Link to="/settings"><i className="fa-solid fa-gear"></i>Settings</Link>
             </div>
             <div className="mainbar">

@@ -7,7 +7,7 @@ api.interceptors.response.use(
     (error) => {
         if(error.response ){
             if(error.response.status === 401){
-                localStorage.setToken(null)
+                localStorage.removeItem('token')
                 window.location.href = '/login'
             } else if (error.response.status === 403) {
                 alert('You don\'t have permission to do that')
@@ -22,7 +22,11 @@ api.interceptors.response.use(
 
 let token = null
 const setToken = (newToken) => {
-    token = `Bearer ${newToken}`
+    if (newToken) {
+        token = `Bearer ${newToken}`
+    } else {
+        token = null
+    }
 }
 
 api.interceptors.request.use((config) => {

@@ -38,12 +38,8 @@ const EditSurvey = ({setAllSurveys}) => {
                 title,
                 description,
                 status,
-                questions: [
-                    {
-                        prompt,
-                        options
-                    }
-                ]
+                prompt,
+                options
             }
 
             const newSurvey = await surveyServices.updateSurvey(id, updatedSurvey)

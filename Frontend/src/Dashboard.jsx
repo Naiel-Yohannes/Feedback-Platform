@@ -5,7 +5,7 @@ const Dashboard = ({user, allSurveys}) => {
 
     return (
         <div>
-            {user.role === 'coordinator' ? <CoordinatorDasboard allSurveys={allSurveys}/> : <MemberDashboard />}
+            {user.role === 'coordinator' ? <CoordinatorDasboard allSurveys={allSurveys}/> : <MemberDashboard allSurveys={allSurveys} />}
         </div>
     )
 }

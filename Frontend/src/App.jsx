@@ -13,6 +13,8 @@ import ViewSurvey from './ViewSurvey'
 import EditSurvey from './EditSurvey'
 import SingleSurveyResponse from './SingleSurveyResponse'
 import Settings from './Settings'
+import MemberResponsePage from './MemberResponsePage'
+import ResponseMessage from './ResponseMessage'
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -63,9 +65,11 @@ function App() {
           <Route path='/dashboard' element={<Layout/>}>
             <Route index element={<Dashboard user={user} allSurveys={allSurveys} />} />
             <Route path='create' element={<CreateSurvey setAllSurveys={setAllSurveys} />}/>
-            <Route path='survey/:id' element={<ViewSurvey />} />
             <Route path='survey/edit/:id' element={<EditSurvey setAllSurveys={setAllSurveys} />} />
+            <Route path='survey/:id' element={<ViewSurvey />} />
             <Route path='responses/survey/:id' element={<SingleSurveyResponse />} />
+            <Route path='survey/response/:id' element={<MemberResponsePage />} />
+            <Route path='thankyou' element={<ResponseMessage />} />
           </Route>
           <Route path='/settings' element={<Settings user={user} setUser={setUser} />} />
         </Route>
