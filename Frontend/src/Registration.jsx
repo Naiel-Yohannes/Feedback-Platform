@@ -18,7 +18,7 @@ const RegistrationForm = ({setUser}) => {
             const newUser = await userServices.createUser({username, name, password, role})
             const loggingUser = await loginServices.login({username: newUser.username, password})
             await setToken(loggingUser.token)
-            localStorage.setItem('token', JSON.stringify(loggingUser.token))
+            localStorage.setItem('token', JSON.stringify(loggingUser))
             setUser(loggingUser)
             setUsername('')
             setName('')
