@@ -1,12 +1,35 @@
 import { useNavigate } from "react-router-dom"
 
-const ShowSurvey = ({filteredSurveys}) => {
+const statusBadge = (status) => {
+    if (status === 'open') return 'badge-open'
+    if (status === 'closed') return 'badge-closed'
+    return 'badge-draft'
+}
+
+const ShowSurvey = ({filteredSurveys, allSurveys, responses}) => {
     const navigate = useNavigate()
     if(filteredSurveys.length === 0){
-        return <p>No surveys found</p>
+        return (
+            <p className="px-6 py-14 text-center text-sm text-zinc-500">
+                No surveys match your search or filter.
+            </p>
+        )
     }
+
+    const surveyResponseCounts = (survey) => {
+        if(responses.length === 0) {
+            return 0
+        }
+        const i = allSurveys.indexOf(survey)
+        if(i !== -1){
+            const responseCount = responses[i]?.length || 0
+            return responseCount
+        }
+        return 0
+    }
+    
     return(
-            <table >
+            <table className="data-table">
                 <thead>
                     <tr>
                         <th>Title</th>
@@ -18,16 +41,20 @@ const ShowSurvey = ({filteredSurveys}) => {
                 <tbody>
                     {filteredSurveys.map(s => (
                         <tr key={s.id}>
-                            <td>{s.title}</td>
-                            <td>{s.status}</td>
-                            <td></td>
+                            <td className="font-medium text-white">{s.title}</td>
                             <td>
-                                {s.status === 'draft' ? (
-                                    <button onClick={() => navigate(`/dashboard/survey/edit/${s.id}`)}>Edit</button>
+                                <span className={statusBadge(s.status)}>{s.status}</span>
+                            </td>
+                            <td className="text-zinc-500">
+                                {surveyResponseCounts(s)}
+                            </td>
+                            <td className="space-x-1">
+                                {s.status === 'draft' ? (    
+                                    <button type="button" className="btn-ghost" onClick={() => navigate(`/dashboard/survey/edit/${s.id}`)}>Edit</button>
                                 ) : s.status === 'open' ? (
-                                    <button onClick={() => navigate(`/dashboard/survey/${s.id}`)}>View</button>
+                                    <button type="button" className="btn-ghost" onClick={() => navigate(`/dashboard/survey/${s.id}`)}>View</button>
                                 ) : (
-                                    <button onClick={() => navigate(`/dashboard/responses/survey/${s.id}`)}>Results</button>
+                                    <button type="button" className="btn-ghost" onClick={() => navigate(`/dashboard/responses/survey/${s.id}`)}>Results</button>
                                 )}
                             </td>
                         </tr>

@@ -1,4 +1,5 @@
 import axios from "axios"
+import toast from "react-hot-toast"
 
 const api = axios.create()
 
@@ -10,9 +11,9 @@ api.interceptors.response.use(
                 localStorage.removeItem('token')
                 window.location.href = '/login'
             } else if (error.response.status === 403) {
-                alert('You don\'t have permission to do that')
+                toast.error(error.response?.data?.error || 'You don\'t have permission to do that')
             } else if (error.response.status === 404) {
-                alert('Resource not found')
+                toast.error(error.response?.data?.error || 'Resource not found')
             }
         }
 

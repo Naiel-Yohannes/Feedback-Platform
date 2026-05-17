@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import surveyServices from '../services/survey'
 import { setToken } from '../services/interceptor'
 import CreateSurvey from './CreateSurvey'
@@ -48,7 +49,7 @@ function App() {
         const surveys = await surveyServices.getAllSurveys()
         setAllSurveys(surveys)
       } catch (error) {
-        console.error("Failed to fetch surveys:", error)
+        toast.error(error.response?.data?.error || 'Could not load surveys')
       }
     }
 
@@ -66,7 +67,7 @@ function App() {
             <Route index element={<Dashboard user={user} allSurveys={allSurveys} />} />
             <Route path='create' element={<CreateSurvey setAllSurveys={setAllSurveys} />}/>
             <Route path='survey/edit/:id' element={<EditSurvey setAllSurveys={setAllSurveys} />} />
-            <Route path='survey/:id' element={<ViewSurvey />} />
+            <Route path='survey/:id' element={<ViewSurvey setAllSurveys={setAllSurveys} />} />
             <Route path='responses/survey/:id' element={<SingleSurveyResponse />} />
             <Route path='survey/response/:id' element={<MemberResponsePage />} />
             <Route path='thankyou' element={<ResponseMessage />} />

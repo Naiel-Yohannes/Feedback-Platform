@@ -1,11 +1,8 @@
-import { Link ,Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 
 const Layout = () => {
     return (
-        <div>
-            <nav>
-                <Link to="/dashboard">Dashboard</Link>
-            </nav>
+        <div className="page-shell">
             <Outlet />
         </div>
     )
