@@ -3,8 +3,10 @@ import toast from "react-hot-toast"
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import surveyServices from '../services/survey'
 import DashboardLayout from './DashboardLayout'
+import { useNavigate } from "react-router-dom"
 
 const CreateSurvey = ({setAllSurveys}) => {
+    const navigate = useNavigate()
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [status, setStatus] = useState('')
@@ -59,6 +61,7 @@ const CreateSurvey = ({setAllSurveys}) => {
             setPrompt('')
             setOptions([])
             toast.success(status === 'draft' ? 'Draft saved' : status === 'open' ? 'Survey published' : 'Survey archived')
+            navigate('/dashboard')
         }catch(error){
             toast.error(error.response?.data?.error || 'Could not create survey')
         }
