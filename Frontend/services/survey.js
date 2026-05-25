@@ -1,5 +1,6 @@
 import api from './interceptor'
-const baseURL = '/api/survey'
+const url = import.meta.env.VITE_API_URL
+const baseURL = `${url}/api/survey`
 
 const getAllSurveys = async () => {
     const response = await api.get(baseURL)
