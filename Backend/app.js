@@ -20,7 +20,12 @@ mongoose.connect(mongodb_uri, {family: 4}).then(() => {
 })
 
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://feedback-platform-pearl.vercel.app"
+  ]
+}))
 app.use(morgan('dev'))
 
 app.use(tokenExtractor)
