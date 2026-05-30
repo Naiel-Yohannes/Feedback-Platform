@@ -1,0 +1,19 @@
+name: New pipline
+on: push
+
+jobs:
+  dependencis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+        
+      - name: Build app
+        run: npm run build
