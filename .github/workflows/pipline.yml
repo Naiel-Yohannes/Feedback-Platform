@@ -54,3 +54,6 @@ jobs:
           context: ./Backend
           push: true
           tags: naiel212/feedback-backend:latest
+
+      - name: Deploy to Render
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
