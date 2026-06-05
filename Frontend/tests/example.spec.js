@@ -2,7 +2,7 @@
 import { test, expect } from '@playwright/test'
 
 const BASE_URL = 'http://localhost:5173'
-const API_URL = 'http://localhost:5001'
+const API_URL = 'http://localhost:5002'
 
 const resetDb = async (request) => {
   const response = await request.post(`${API_URL}/api/testing/reset`)
