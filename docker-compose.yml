@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_USER: postgres
+      - POSTGRES_PASSWORD: postgres212
+      - POSTGRES_DB: feedback_platform
+  
+  backend:
+    build: ./Backend
+    depends_on:
+      - postgres
+    environment:
+      - POSTGRES_URI=postgresql://postgres:postgres212@postgres:5432/feedback_platform
+
+  frontend:
+    build: ./Frontend
+    depends_on:
+      - backend
+    environment:
+      - VITE_API_URL=https://feedback-platform-backend-docker.onrender.com
