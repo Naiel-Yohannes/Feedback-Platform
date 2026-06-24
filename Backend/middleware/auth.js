@@ -1,6 +1,6 @@
-const User = require('../modules/user')
 const jwt = require('jsonwebtoken')
 const {secret} = require('../utils/config')
+const pool = require('../db')
 
 const tokenExtractor = (req, res, next) => {
     const authorization = req.get('Authorization')
@@ -23,12 +23,16 @@ const userExtractor = async (req, res, next) => {
             return res.status(401).json({error: 'Invalid token'})
         }
 
-        const user = await User.findById(decoded.id)
-        if(!user){
+        const user = await pool.query(
+            `
+            SELECT id, name, username, role FROM users WHERE id = $1
+            `, [decoded.id]
+        )
+        if(user.rows.length === 0){
             return res.status(401).json({error: 'User not found'})
         }
 
-        req.user = user
+        req.user = user.rows[0]
         next()
     }catch(error){
         next(error)

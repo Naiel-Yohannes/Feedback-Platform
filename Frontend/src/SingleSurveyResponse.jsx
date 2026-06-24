@@ -30,7 +30,7 @@ const SingleSurveyResponse = () => {
         
     }, [id])
 
-    const total = response?.length || 0
+    const total = response?.no_of_responses || 0
     const statusClass = survey?.status === 'open' ? 'badge-open' : survey?.status === 'closed' ? 'badge-closed' : 'badge-draft'
 
     return (
@@ -57,18 +57,18 @@ const SingleSurveyResponse = () => {
                         </div>
 
                         {survey?.questions?.map(q => (
-                            <div key={q._id || q.prompt} className="card mt-8 p-6 sm:p-7">
+                            <div key={q.id || q.prompt} className="card mt-8 p-6 sm:p-7">
                                 <h3 className="text-lg font-semibold text-white">{q.prompt}</h3>
                                 <div className="mt-7 space-y-5">
-                                    {q.options.map((option, index) => {
+                                    {q.options.map((option) => {
                                         const count = total > 0
-                                            ? response.filter(r => r.answers[0].selectedOption === index).length
+                                            ? response.responses?.filter(r => r.option_id === option.id).length || 0
                                             : 0
                                         const pct = total > 0 ? ((count / total) * 100) : 0
                                         return (
-                                            <div key={index}>
+                                            <div key={option.id}>
                                                 <div className="mb-2 flex items-center justify-between gap-2 text-sm">
-                                                    <span className="font-medium text-zinc-200">{option}</span>
+                                                    <span className="font-medium text-zinc-200">{option.option_text}</span>
                                                     <span className="shrink-0 tabular-nums text-zinc-500">
                                                         {count} · {pct.toFixed(0)}%
                                                     </span>

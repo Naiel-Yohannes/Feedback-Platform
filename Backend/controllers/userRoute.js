@@ -1,7 +1,7 @@
 const userRouter = require('express').Router()
 const validator = require('validator')
-const User = require('../modules/user')
 const bcrypt = require('bcrypt')
+const pool = require('../db')
 
 userRouter.post('/', async(req, res, next) => {
    try{
@@ -17,15 +17,14 @@ userRouter.post('/', async(req, res, next) => {
 
         const passwordHash = await bcrypt.hash(password, 10)
 
-        const user = new User({
-            name: name.toLowerCase(),
-            username: username.toLowerCase(),
-            passwordHash,
-            role: role.toLowerCase()
-        })
-
-        const newUser = await user.save()
-        res.status(201).json(newUser)
+        const newUser = await pool.query(
+            `
+            INSERT INTO users (name, username, password, role)
+            VALUES ($1, $2, $3, $4)
+            RETURNING username, name, role
+            `, [name.toLowerCase(), username.toLowerCase(), passwordHash, role.toLowerCase()]
+        )
+        res.status(201).json(newUser.rows[0])
    }catch(error){
         next(error)
    }

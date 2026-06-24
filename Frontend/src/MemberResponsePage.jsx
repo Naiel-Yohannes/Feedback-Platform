@@ -39,7 +39,7 @@ const MemberResponsePage = () => {
             }
 
             const surveyId = survey.id
-            const questionId = survey.questions[0]._id 
+            const questionId = survey.questions[0].id 
 
             if (!surveyId || !questionId) {
                 toast.error('Unable to determine survey or question id.')
@@ -47,7 +47,7 @@ const MemberResponsePage = () => {
             }
 
             setSubmitting(true)
-            await responseServices.submitResponse({ surveyId, questionId, selectedOption })
+            await responseServices.submitResponse({ surveyId, option_id: selectedOption })
             navigate('/dashboard/thankyou')
         } catch (error) {
             if (error.response?.status === 409) {
@@ -77,20 +77,20 @@ const MemberResponsePage = () => {
                         </h3>
 
                         <form onSubmit={handleSubmit} className="mt-6 space-y-3">
-                            {survey.questions[0]?.options.map((option, index) => (
+                            {survey.questions[0]?.options.map((option) => (
                                 <label
-                                    key={index}
-                                    className={selectedOption === index ? 'option-card-selected' : 'option-card'}
+                                    key={option.id}
+                                    className={selectedOption === option.id ? 'option-card-selected' : 'option-card'}
                                 >
                                     <input
                                         type="radio"
                                         name="option"
-                                        value={index}
+                                        value={option.id}
                                         className="h-4 w-4 border-zinc-600 bg-zinc-900 text-white focus:ring-zinc-500"
-                                        checked={selectedOption === index}
-                                        onChange={() => setSelectedOption(index)}
+                                        checked={selectedOption === option.id}
+                                        onChange={() => setSelectedOption(option.id)}
                                     />
-                                    <span className="text-sm font-medium text-zinc-200">{option}</span>
+                                    <span className="text-sm font-medium text-zinc-200">{option.option_text}</span>
                                 </label>
                             ))}
                             <button type="submit" className="btn-primary mt-6 w-full sm:w-auto" disabled={submitting}>

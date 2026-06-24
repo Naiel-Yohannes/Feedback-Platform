@@ -1,16 +1,13 @@
 const testingRoute = require('express').Router()
-const Users = require('../modules/user')
-const Responses = require('../modules/response')
-const Surveys = require('../modules/survey')
+const pool = require('../db')
 
 testingRoute.post('/reset', async (req, res) => {
     try {
-        await Users.deleteMany({})
-        await Responses.deleteMany({})
-        await Surveys.deleteMany({})
-        res.status(204).end()
+        await pool.query('TRUNCATE TABLE responses, options, questions, surveys, users RESTART IDENTITY CASCADE')
+        return res.status(204).end()
     } catch (error) {
-        res.status(500).json({error: 'Failed to reset database'})
+        console.error('error:', error.message || error)
+        return res.status(204).end()
     }
 })
 

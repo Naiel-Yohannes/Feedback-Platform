@@ -1,5 +1,3 @@
-const {mongodb_uri} = require('./utils/config')
-const mongoose = require('mongoose')
 const {info, error} = require('./utils/logger')
 const express = require('express')
 const morgan = require('morgan')
@@ -13,12 +11,6 @@ const {errorHandler} = require('./middleware/errorHandler')
 
 const app = express()
 
-mongoose.connect(mongodb_uri, {family: 4}).then(() => {
-    info('connected to MongoDb')
-}).catch(() => {
-    error('failed conntecting to MongoDb')
-})
-
 app.use(express.json())
 app.use(cors({
   origin: [
@@ -29,6 +21,17 @@ app.use(cors({
 app.use(morgan('dev'))
 
 app.use(tokenExtractor)
+
+const pool = require('./db')
+
+app.get('/health', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT NOW() as time')
+    res.json({ status: 'ok', database: 'connected', time: result.rows[0].time })
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: err.message })
+  }
+})
 
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)

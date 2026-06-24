@@ -26,7 +26,7 @@ const EditSurvey = ({setAllSurveys}) => {
                 setDescription(fetchedSurvey.description)
                 setStatus(fetchedSurvey.status)
                 setPrompt(fetchedSurvey.questions[0]?.prompt)
-                setOptions(fetchedSurvey.questions[0]?.options || [])
+                setOptions(fetchedSurvey.questions[0]?.options.map(o => o.option_text) || [])
             } catch (error) {
                 toast.error(error.response?.data?.error || 'Could not load survey')
             } finally {

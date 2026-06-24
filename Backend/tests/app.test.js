@@ -1,10 +1,6 @@
 jest.setTimeout(30000)
-const Response = require('../modules/response')
-const Survey = require('../modules/survey')
-const User = require('../modules/user')
 const supertest = require('supertest')
 const app = require('../app')
-const mongoose = require('mongoose')
 
 const api = supertest(app)
 
@@ -27,10 +23,9 @@ const buildSurvey = (overrides = {}) => ({
     ...overrides
 })
 
-const buildResponsePayload = ({ surveyId, questionId, selectedOption = 0 } = {}) => ({
+const buildResponsePayload = ({ surveyId, option_id } = {}) => ({
     surveyId,
-    questionId,
-    selectedOption
+    option_id
 })
 
 const createUser = async (role = 'coordinator', status = 201, password = DEFAULT_PASSWORD, name = 'Test User') => {
@@ -63,9 +58,7 @@ const createSurvey = async (token, status = 201, overrides = {}) => {
 }
 
 beforeEach(async () => {
-    await User.deleteMany({})
-    await Survey.deleteMany({})
-    await Response.deleteMany({})
+    await api.post('/api/testing/reset').expect(204)
 })
 
 describe('Full backend test', () => {
@@ -266,7 +259,7 @@ describe('Full backend test', () => {
 
             const response = buildResponsePayload({
                 surveyId: surveyResponse.body[0].id,
-                questionId: surveyResponse.body[0].questions[0]._id
+                option_id: surveyResponse.body[0].questions[0].options[0].id
             })
 
             await api.post('/api/responses')
@@ -278,16 +271,14 @@ describe('Full backend test', () => {
                 .set('Authorization', `Bearer ${token}`)
                 .expect(200)
                 
-            expect(getResponse.body[0].surveyId).toBe(surveyResponse.body[0].id)
+            expect(getResponse.body[0].survey_id).toBe(surveyResponse.body[0].id)
             expect(getResponse.body).toHaveLength(1)
         })
         test('fails with invalid data', async() => {
             const member = await createUser('member', 201, DEFAULT_RESPONSE_PASSWORD, 'Response User')
             const responseToken = await loginUser(member, 201)
 
-            const response = buildResponsePayload({
-                questionId: surveyResponse.body[0].questions[0]._id
-            })
+            const response = buildResponsePayload({})
 
             const newResponse = await api.post('/api/responses')
                 .set('Authorization', `Bearer ${responseToken}`)
@@ -301,7 +292,7 @@ describe('Full backend test', () => {
 
             const response = buildResponsePayload({
                 surveyId: surveyResponse.body[0].id,
-                questionId: surveyResponse.body[0].questions[0]._id
+                option_id: surveyResponse.body[0].questions[0].options[0].id
             })
 
             const newResponse = await api.post('/api/responses')
@@ -318,7 +309,7 @@ describe('Full backend test', () => {
 
             const response = buildResponsePayload({
                 surveyId: surveyResponse.body[0].id,
-                questionId: surveyResponse.body[0].questions[0]._id
+                option_id: surveyResponse.body[0].questions[0].options[0].id
             })
 
             await api.post('/api/responses')
@@ -328,8 +319,7 @@ describe('Full backend test', () => {
 
            const secondResponse = buildResponsePayload({
                 surveyId: surveyResponse.body[0].id,
-                questionId: surveyResponse.body[0].questions[0]._id,
-                selectedOption: 1
+                option_id: surveyResponse.body[0].questions[0].options[1].id
            })
 
             const newResponse = await api.post('/api/responses')
@@ -361,7 +351,7 @@ describe('Full backend test', () => {
 
             const response = buildResponsePayload({
                 surveyId: urveyResponse2.body[1].id,
-                questionId: urveyResponse2.body[1].questions[0]._id
+                option_id: urveyResponse2.body[1].questions[0].options[0].id
             })
 
             const newResponse = await api.post('/api/responses')
@@ -377,8 +367,7 @@ describe('Full backend test', () => {
 
             const response = buildResponsePayload({
                 surveyId: surveyResponse.body[0].id,
-                questionId: surveyResponse.body[0].questions[0]._id,
-                selectedOption: -1
+                option_id: -1
             })
 
             const newResponse = await api.post('/api/responses')
@@ -386,13 +375,13 @@ describe('Full backend test', () => {
                 .send(response)
                 .expect(400)
                 
-            expect(newResponse.body.error).toBe('Invalid option index')
+            expect(newResponse.body.error).toBe('Invalid option selected')
         })
 
         test('a coordinator cant send a response', async() => {
             const response = buildResponsePayload({
                 surveyId: surveyResponse.body[0].id,
-                questionId: surveyResponse.body[0].questions[0]._id
+                option_id: surveyResponse.body[0].questions[0].options[0].id
             })
 
             const newResponse = await api.post('/api/responses')
@@ -426,7 +415,7 @@ describe('Full backend test', () => {
 
             const response = buildResponsePayload({
                 surveyId: draftSurveys[0].id,
-                questionId: draftSurveys[0].questions[0]._id
+                option_id: draftSurveys[0].questions[0].options[0].id
             })
 
             const newResponse = await api.post('/api/responses')
@@ -437,8 +426,4 @@ describe('Full backend test', () => {
             expect(newResponse.body.error).toBe('This survey is not open')
         })
     })
-})
-
-afterAll(async() => {
-    await mongoose.connection.close()
 })

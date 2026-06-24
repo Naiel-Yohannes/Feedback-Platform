@@ -12,7 +12,7 @@ const MemberDashboard = ({allSurveys}) => {
                     View surveys shared by coordinators and submit your feedback.
                 </p>
 
-                <div className="mt-8 stat-card inline-block min-w-[11rem]">
+                <div className="mt-8 stat-card inline-block min-w-44">
                     <p className="text-sm text-zinc-500">Open surveys</p>
                     <p className="mt-2 text-3xl font-bold tracking-tight text-white">{openCount}</p>
                 </div>

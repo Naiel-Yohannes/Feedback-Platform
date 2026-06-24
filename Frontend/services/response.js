@@ -7,9 +7,14 @@ const getResponse = async (id) => {
     return response.data
 }
 
+const getTotalResponses = async () => {
+    const response = await api.get(`${baseURL}/surveys/total`)
+    return response.data
+}
+
 const submitResponse = async (response) => {
     const res = await api.post(baseURL, response)
     return res.data
 }
 
-export default { getResponse, submitResponse}
+export default { getResponse, submitResponse, getTotalResponses }

@@ -6,7 +6,7 @@ const statusBadge = (status) => {
     return 'badge-draft'
 }
 
-const ShowSurvey = ({filteredSurveys, allSurveys, responses}) => {
+const ShowSurvey = ({filteredSurveys, responses}) => {
     const navigate = useNavigate()
     if(filteredSurveys.length === 0){
         return (
@@ -17,15 +17,8 @@ const ShowSurvey = ({filteredSurveys, allSurveys, responses}) => {
     }
 
     const surveyResponseCounts = (survey) => {
-        if(responses.length === 0) {
-            return 0
-        }
-        const i = allSurveys.indexOf(survey)
-        if(i !== -1){
-            const responseCount = responses[i]?.length || 0
-            return responseCount
-        }
-        return 0
+        const found = responses.find(r => r.survey_id === survey.id)
+        return found ? Number(found.count) : 0
     }
     
     return(

@@ -12,7 +12,7 @@ const CoordinatorDasboard = ({allSurveys}) => {
     useEffect(() => {
         const fetchResponses = async () => {
             try {
-                const fetchedResponses = await Promise.all(allSurveys.map(s => responseServices.getResponse(s.id)))
+                const fetchedResponses = await responseServices.getTotalResponses()
                 setResponses(fetchedResponses)                
             } catch (error) {
                 toast.error(error.response?.data?.error || 'Could not load response counts')
@@ -30,6 +30,8 @@ const CoordinatorDasboard = ({allSurveys}) => {
 
     const filteredSurveys = filter === 'all' ? searchFilteredSurveys : searchFilteredSurveys.filter(s => s.status === filter)
     
+    const totalResponses = responses.reduce((sum, r) => sum + Number(r.count), 0)
+    
     return (
         <DashboardLayout
             headerRight={
@@ -42,7 +44,7 @@ const CoordinatorDasboard = ({allSurveys}) => {
             <div className="dashboard-content">
                 <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">Coordinator Dashboard</h1>
                 <p className="mt-1 text-sm text-zinc-500">Manage surveys and review responses.</p>
-
+ 
                 <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     <div className="stat-card">
                         <p className="text-sm text-zinc-500">Total surveys</p>
@@ -54,7 +56,7 @@ const CoordinatorDasboard = ({allSurveys}) => {
                     </div>
                     <div className="stat-card">
                         <p className="text-sm text-zinc-500">Responses</p>
-                        <h3 className="mt-2 text-3xl font-bold tracking-tight text-white">{responses.flat().length}</h3>
+                        <h3 className="mt-2 text-3xl font-bold tracking-tight text-white">{totalResponses}</h3>
                     </div>
                     <div className="stat-card">
                         <p className="text-sm text-zinc-500">Closed</p>
