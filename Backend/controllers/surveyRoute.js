@@ -59,7 +59,7 @@ surveyRouter.get('/', userExtractor, async (req, res, next) => {
     if (req.user.role === 'member') {
       const surveys = await pool.query(
         `
-        SELECT surveys.id AS survey_id, surveys.title AS title, surveys.description, surveys.creator_id, questions.id AS question_id, questions.question AS question, options.id AS option_id, options.option_text AS option
+        SELECT surveys.id AS survey_id, surveys.title AS title, surveys.description, surveys.status, surveys.creator_id, questions.id AS question_id, questions.question AS question, options.id AS option_id, options.option_text AS option
         FROM surveys
         JOIN questions ON questions.survey_id = surveys.id
         JOIN options ON options.question_id = questions.id
@@ -76,6 +76,7 @@ surveyRouter.get('/', userExtractor, async (req, res, next) => {
               id: row.survey_id,
               title: row.title,
               description: row.description,
+              status: row.status,
               creator_id: row.creator_id,
               questions: {}
             }
@@ -134,6 +135,7 @@ surveyRouter.get('/:id', userExtractor, async (req, res, next) => {
               id: row.survey_id,
               title: row.title,
               description: row.description,
+              status: row.status,
               creator_id: row.creator_id,
               questions: {}
             }
@@ -170,6 +172,7 @@ surveyRouter.get('/:id', userExtractor, async (req, res, next) => {
               id: row.survey_id,
               title: row.title,
               description: row.description,
+              status: row.status,
               creator_id: row.creator_id,
               questions: {}
             }

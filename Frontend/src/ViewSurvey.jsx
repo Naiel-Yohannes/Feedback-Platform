@@ -9,6 +9,7 @@ const ViewSurvey = ({setAllSurveys}) => {
     const { id } = useParams()
     const [survey, setSurvey] = useState(null)
     const navigate = useNavigate()
+    const status = survey?.status
 
     useEffect(() => {
         const fetchSurvey = async () => {
@@ -47,7 +48,7 @@ const ViewSurvey = ({setAllSurveys}) => {
                         >
                             View results
                         </button>
-                        {survey.status === 'open' && (
+                        {status === 'open' && (
                             <button
                                 type="button"
                                 className="btn-secondary m-2"
@@ -80,7 +81,7 @@ const ViewSurvey = ({setAllSurveys}) => {
                         <ul className="mt-3 space-y-2">
                             {survey.questions[0]?.options.map((option, index) => (
                                 <li key={index} className="rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm text-zinc-200">
-                                    {option}
+                                    {option.option_text}
                                 </li>
                             ))}
                         </ul>
