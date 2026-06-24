@@ -9,7 +9,7 @@ surveyRouter.get('/', userExtractor, async (req, res, next) => {
     if (req.user.role === 'coordinator') {
       const surveys = await pool.query(
         `
-        SELECT surveys.id AS survey_id, surveys.title AS title, surveys.description, surveys.creator_id, questions.id AS question_id, questions.question AS question, options.id AS option_id, options.option_text AS option
+        SELECT surveys.id AS survey_id, surveys.title AS title, surveys.description, surveys.status AS status, surveys.creator_id AS creator_id, questions.id AS question_id, questions.question AS question, options.id AS option_id, options.option_text AS option
         FROM users
         JOIN surveys ON surveys.creator_id = users.id
         JOIN questions ON questions.survey_id = surveys.id
@@ -28,6 +28,7 @@ surveyRouter.get('/', userExtractor, async (req, res, next) => {
             id: row.survey_id,
             title: row.title,
             description: row.description,
+            status: row.status,
             creator_id: row.creator_id,
             questions: {}
           }

@@ -1,5 +1,7 @@
 jest.setTimeout(30000)
 const supertest = require('supertest')
+const setupTestDb = require('./setupTestDb')
+const pool = require('../db')
 const app = require('../app')
 
 const api = supertest(app)
@@ -57,8 +59,16 @@ const createSurvey = async (token, status = 201, overrides = {}) => {
     return createdSurvey.body
 }
 
+beforeAll(async () => {
+    await setupTestDb()
+})
+
 beforeEach(async () => {
     await api.post('/api/testing/reset').expect(204)
+})
+
+afterAll(async () => {
+    await pool.end()
 })
 
 describe('Full backend test', () => {
@@ -271,8 +281,9 @@ describe('Full backend test', () => {
                 .set('Authorization', `Bearer ${token}`)
                 .expect(200)
                 
-            expect(getResponse.body[0].survey_id).toBe(surveyResponse.body[0].id)
-            expect(getResponse.body).toHaveLength(1)
+            expect(getResponse.body.no_of_responses).toBe(1)
+            expect(getResponse.body.responses[0].survey_id).toBe(surveyResponse.body[0].id)
+            expect(getResponse.body.responses).toHaveLength(1)
         })
         test('fails with invalid data', async() => {
             const member = await createUser('member', 201, DEFAULT_RESPONSE_PASSWORD, 'Response User')
