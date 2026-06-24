@@ -37,8 +37,8 @@ jobs:
       - name: Run tests
         working-directory: Backend
         env:
-          MONGODB_URI: ${{ secrets.POSTGRES_URI }}
-          MONGODB_URI_TEST: ${{ secrets.POSTGRES_URI_TEST }}
+          POSTGRES_URI: ${{ secrets.POSTGRES_URI }}
+          POSTGRES_URI_TEST: ${{ secrets.POSTGRES_URI_TEST }}
           SECRET: ${{ secrets.SECRET }}
         run: npm test
       
