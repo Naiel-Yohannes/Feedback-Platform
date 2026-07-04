@@ -459,14 +459,14 @@ surveyRouter.put('/:id', userExtractor, requireRole('coordinator'), async (req, 
       if (!surveyRow[row.survey_id].questions[row.question_id]) {
         surveyRow[row.survey_id].questions[row.question_id] = {
           id: row.question_id,
-          question: row.question,
+          prompt: row.question,
           options: []
         }
       }
 
       surveyRow[row.survey_id].questions[row.question_id].options.push({
         id: row.option_id,
-        option: row.option
+        option_text: row.option
       })
     }
 
