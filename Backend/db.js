@@ -4,9 +4,11 @@ const {info} = require('./utils/logger')
 
 const pool = new Pool({
   connectionString: postgres_uri,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ...(process.env.NODE_ENV === 'production' ? {
+    ssl: {
+      rejectUnauthorized: false
+    }
+  } : {})
 })
 
 pool.on('connect', () => {
