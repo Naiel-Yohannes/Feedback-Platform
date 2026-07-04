@@ -297,8 +297,11 @@ surveyRouter.post('/', userExtractor, requireRole('coordinator'), async (req, re
       title: survey.rows[0].title,
       description: survey.rows[0].description,
       status: survey.rows[0].status,
-      question: question.rows[0].question,
-      options: optionsToSend.rows.map(e => ({ id: e.id, option_text: e.option_text }))
+      questions: [{
+        id: question.rows[0].id,
+        prompt: question.rows[0].question,
+        options: optionsToSend.rows.map(e => ({ id: e.id, option_text: e.option_text }))
+      }]
     })
   } catch (error) {
     await client.query(`ROLLBACK`)
