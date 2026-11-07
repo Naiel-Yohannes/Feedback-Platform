@@ -12,11 +12,22 @@ const RegistrationForm = ({setUser}) => {
     const [password, setPassword] = useState('')
     const [role, setRole] = useState('')
     const rolesToChoose = ['coordinator', 'member']
+    const passwordRequirements = [
+        { label: 'At least 8 characters', met: password.length >= 8 },
+        { label: 'One uppercase letter', met: /[A-Z]/.test(password) },
+        { label: 'One lowercase letter', met: /[a-z]/.test(password) },
+        { label: 'One number', met: /\d/.test(password) },
+        { label: 'One special character', met: /[^A-Za-z0-9]/.test(password) }
+    ]
 
     const RegisterationHandler = async(e) => {
         e.preventDefault()
         if (!username.trim() || !name.trim() || !password || !role) {
             toast.error('Fill in all fields and choose a role')
+            return
+        }
+        if (!passwordRequirements.every(requirement => requirement.met)) {
+            toast.error('Password must contain at least 8 characters, including uppercase, lowercase, number, and special character')
             return
         }
         try{
@@ -33,10 +44,6 @@ const RegistrationForm = ({setUser}) => {
             navigate('/dashboard')
         }catch(error){
             toast.error(error.response?.data?.error || 'Registration failed')
-            setUsername('')
-            setName('')
-            setPassword('')
-            setRole('')
         }
     }
 
@@ -59,6 +66,13 @@ const RegistrationForm = ({setUser}) => {
                         Password
                         <input type="password" className="input-field" value={password} onChange={e => setPassword(e.target.value)} />
                     </label>
+                    <ul className="space-y-1 text-xs" aria-label="Password requirements">
+                        {passwordRequirements.map(requirement => (
+                            <li key={requirement.label} className={requirement.met ? 'text-emerald-400' : 'text-zinc-500'}>
+                                {requirement.met ? '✓' : '○'} {requirement.label}
+                            </li>
+                        ))}
+                    </ul>
                     <div>
                         <span className="label-text">Role</span>
                         <div className="filter-group mt-2">

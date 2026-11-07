@@ -11,8 +11,16 @@ userRouter.post('/', async(req, res, next) => {
             return res.status(400).json({error: 'Missing credentials'})
         }
 
-        if(!validator.isStrongPassword(password)){
-            return res.status(400).json({error: 'Weak password'})
+        if(!validator.isStrongPassword(password, {
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1
+        })){
+            return res.status(400).json({
+                error: 'Password must contain at least 8 characters, including uppercase, lowercase, number, and special character'
+            })
         }
 
         const passwordHash = await bcrypt.hash(password, 10)
