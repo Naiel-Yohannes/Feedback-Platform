@@ -18,7 +18,7 @@ surveyRouter.get('/', userExtractor, async (req, res, next ) => {
         ORDER BY surveys.id, questions.order_index, options.order_index
         `, [req.user.id]
       )
-      if(surveys.rows.length === 0) return res.status(200).json({error: 'you dont have any surveys'})
+      if(surveys.rows.length === 0) return res.status(200).json([])
 
       const surveyRow = {}
 
@@ -67,7 +67,7 @@ surveyRouter.get('/', userExtractor, async (req, res, next ) => {
         ORDER BY surveys.id, questions.order_index, options.order_index
         `
       )
-      if(surveys.rows.length === 0) return res.status(200).json({error: 'there arent any surveys to respond to'})
+      if(surveys.rows.length === 0) return res.status(200).json([])
         const surveyRow = {}
 
         for (const row of surveys.rows) {

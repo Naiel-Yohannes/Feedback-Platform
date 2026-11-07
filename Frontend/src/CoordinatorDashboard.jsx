@@ -13,7 +13,7 @@ const CoordinatorDasboard = ({allSurveys}) => {
         const fetchResponses = async () => {
             try {
                 const fetchedResponses = await responseServices.getTotalResponses()
-                setResponses(fetchedResponses)                
+                setResponses(Array.isArray(fetchedResponses) ? fetchedResponses : [])
             } catch (error) {
                 toast.error(error.response?.data?.error || 'Could not load response counts')
             }

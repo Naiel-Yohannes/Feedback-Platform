@@ -47,7 +47,7 @@ function App() {
       }
       try {
         const surveys = await surveyServices.getAllSurveys()
-        setAllSurveys(surveys)
+        setAllSurveys(Array.isArray(surveys) ? surveys : [])
       } catch (error) {
         toast.error(error.response?.data?.error || 'Could not load surveys')
       }
