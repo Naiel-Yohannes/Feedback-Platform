@@ -4,7 +4,7 @@ const pool = require('../db')
 
 const VALID_STATUSES = ['closed', 'open', 'draft']
 
-surveyRouter.get('/', userExtractor, async (req, res, next) => {
+surveyRouter.get('/', userExtractor, async (req, res, next ) => {
   try {
     if (req.user.role === 'coordinator') {
       const surveys = await pool.query(
